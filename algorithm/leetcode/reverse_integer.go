@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-	fmt.Println("123", reverse(123), " -123", reverse(-123))
+	fmt.Println("1534236469", reverse(1534236469), " -123", reverse(-123))
 }
 
 func reverse(x int) int {
@@ -21,8 +21,15 @@ func reverse(x int) int {
 	}
 
 	if flag == false {
-		return -ret
+		ret = -ret
+		if ret < -1<<31 {
+			return 0
+		}
+		return ret
 	} else {
+		if ret > 1<<31-1 {
+			return 0
+		}
 		return ret
 	}
 }
