@@ -36,6 +36,7 @@ func min(a, b, c int) int {
 	if c < tmp {
 		tmp = c
 	}
+	return tmp
 }
 
 func nthUglyNumber(n int) int {
@@ -47,7 +48,7 @@ func nthUglyNumber(n int) int {
 
 func main() {
 	for i := 0; i < 11; i++ {
-		fmt.Print(i, " ")
+		fmt.Print(uglyNum[i], " ")
 	}
 	fmt.Print("\n")
 
