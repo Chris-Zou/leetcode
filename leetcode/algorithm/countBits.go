@@ -4,19 +4,11 @@ import (
 	"fmt"
 )
 
-func getBits(n int) int {
-	ret := 0
-	for n != 0 {
-		n = n & (n - 1)
-		ret++
-	}
-	return ret
-}
-
 func countBits(num int) []int {
 	var ret []int
-	for i := 0; i <= num; i++ {
-		ret = append(ret, getBits(i))
+	ret = append(ret, 0)
+	for i := 1; i <= num; i++ {
+		ret = append(ret, ret[i&(i-1)]+1)
 	}
 	return ret
 }
