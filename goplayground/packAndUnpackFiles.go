@@ -12,17 +12,17 @@ import (
 )
 
 func main() {
-	TarFile := "test.tar"
-	src := "test"
-	dstDir := "test_ext"
+	TarFile := "test.tar.gz"
+	src := "test.txt"
+	//dstDir := "test_ext"
 
 	if err := Tar(src, TarFile, false); err != nil {
 		fmt.Println(err)
 	}
 
-	if err := UnTar(TarFile, dstDir); err != nil {
+	/*if err := UnTar(TarFile, dstDir); err != nil {
 		fmt.Println(err)
-	}
+	}*/
 }
 
 func Tar(src string, dstTar string, failIfExist bool) (err error) {
@@ -52,7 +52,11 @@ func Tar(src string, dstTar string, failIfExist bool) (err error) {
 
 	tw := tar.NewWriter(gw)
 	defer func() {
+		if er := tw.Flush(); er != nil {
+			fmt.Println("flush file failed")
+		}
 		if er := tw.Close(); er != nil {
+			fmt.Println("close file failed")
 			err = er
 		}
 	}()
@@ -67,6 +71,7 @@ func Tar(src string, dstTar string, failIfExist bool) (err error) {
 	if fi.IsDir() {
 		tarDir(srcBase, srcRelative, tw, fi)
 	} else {
+		fmt.Println("tar file")
 		tarFile(srcBase, srcRelative, tw, fi)
 	}
 
@@ -116,23 +121,27 @@ func tarFile(srcBase, srcRelative string, tw *tar.Writer, fi os.FileInfo) (err e
 	// 写入文件信息
 	hdr, err := tar.FileInfoHeader(fi, "")
 	if err != nil {
+		fmt.Println("line 124:", err)
 		return err
 	}
 	hdr.Name = srcRelative
 
 	if err = tw.WriteHeader(hdr); err != nil {
+		fmt.Println("line 130:", err)
 		return err
 	}
 
 	// 打开要打包的文件，准备读取
 	fr, err := os.Open(srcFull)
 	if err != nil {
+		fmt.Println("line 137:", err)
 		return err
 	}
 	defer fr.Close()
 
 	// 将文件数据写入 tw 中
 	if _, err = io.Copy(tw, fr); err != nil {
+		fmt.Println("line 144:", err)
 		return err
 	}
 	return nil
